@@ -1,0 +1,104 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <!-- 引用jQuery -->
+    <script src="http://cdn.staticfile.org/jquery/3.5.1/jquery.js"></script>
+
+    <!-- 引用Vue -->
+    <script src="http://cdn.staticfile.org/vue/2.6.11/vue.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.js"></script>
+
+    <script>
+        // 初始化代码:
+        $(function () {
+            var vm = new Vue({
+                el: '#vm',
+                data: {
+                    name: 'Robot',
+                    age: 15,
+                    email: '1@qq.com',
+                    language: ['zh', 'en'],
+                    subscribe: true,
+                    city: 'sh',
+                    title: "todo list",
+                    todos: [
+                        {
+                            name: '产品评审',
+                            description: '新款iPhone上市前评审'
+                        },
+                        {
+                            name: '开发计划',
+                            description: '与PM确定下一版Android开发计划'
+                        },
+                        {
+                            name: 'VC会议',
+                            description: '敲定C轮5000万美元融资'
+                        }
+                    ]
+                },
+                created: function () {
+                },
+                methods: {
+                    register: function () {
+                        // 显示JSON格式的Model:
+                        alert(JSON.stringify(this.$data));
+                        console.log(JSON.stringify(this.$data))
+                        // TODO: AJAX POST...
+                    }
+                }
+            });
+            window.vm = vm;
+        });
+    </script>
+
+</head>
+
+<body>
+
+<!--<div id="vm">-->
+<!--    <p>Hello, {{name}}!</p>-->
+<!--    <p>You are {{age}} years old!</p>-->
+<!--    <p>Hello, <span v-text="name"></span>!</p>-->
+<!--    -->
+<!--    -->
+<!--</div>-->
+
+
+<!--双向绑定-->
+<form id="vm" action="#" v-on:submit.prevent="register">
+    <p><input v-model="email"></p>
+    <p><input v-model="name"></p>
+
+    <label><input type="checkbox" v-model="language" value="zh"> Chinese</label>
+    <label><input type="checkbox" v-model="language" value="en"> English</label>
+    <label><input type="checkbox" v-model="language" value="fr"> French</label>
+    <br/><br/>
+    subscribe:<input type="checkbox" v-model="subscribe">
+
+    <br/><br/>
+    <select v-model="city">
+        <option value="bj">Beijing</option>
+        <option value="sh">Shanghai</option>
+        <option value="gz">Guangzhou</option>
+    </select>
+
+    <p>{{title}}</p>
+    <ol>
+        <li v-for="t in todos">
+            <dl>
+                <dt>{{ t.name }}</dt>
+                <dd>{{ t.description }}</dd>
+            </dl>
+        </li>
+    </ol>
+
+
+    <input type="submit" value="submit">
+</form>
+
+
+<!-- window.vm.name = 'Bob' -->
+
+</body>
+<html>

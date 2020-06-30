@@ -1,0 +1,89 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <!-- 引用jQuery -->
+    <script src="http://cdn.staticfile.org/jquery/3.5.1/jquery.js"></script>
+
+    <!-- 引用Vue -->
+    <script src="http://cdn.staticfile.org/vue/2.6.11/vue.js"></script>
+    <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.js"></script>
+
+    <script>
+        // 初始化代码:
+        $(function () {
+            var vmAdd = new Vue({
+                el: '#vmAdd',
+                data: {
+                    name: 'test',
+                    description: 'test'
+                },
+                methods: {
+                    submit: function () {
+                        vm.create(this.$data);
+                    }
+                }
+            });
+
+            var vm = new Vue({
+                el: '#vm',
+                data: {
+                    title: 'TODO List',
+                    todos: []
+                },
+                created: function () {
+                    this.init();
+                },
+                methods: {
+                    init: function () {
+                        var that = this;
+                        that.$resource('/api/todos').get().then(function (resp) {
+                            // 调用API成功时调用json()异步返回结果:
+                            resp.json().then(function (result) {
+                                // 更新VM的todos:
+                                that.todos = result.todos;
+                            });
+                        }, function (resp) {
+                            // 调用API失败:
+                            alert('error');
+                        });
+                    },
+                    f:function () {
+
+                    }
+                }
+            });
+
+            window.vmAdd = vmAdd;
+            window.vm = vm;
+        });
+    </script>
+
+</head>
+
+<body>
+
+<div id="vm">
+    <h3>{{ title }}</h3>
+    <ol>
+        <li v-for="t in todos">
+            <dl>
+                <dt contenteditable="true" v-on:blur="update(t, 'name', $event)">{{ t.name }}</dt>
+                <dd contenteditable="true" v-on:blur="update(t, 'description', $event)">{{ t.description }}</dd>
+                <dd><a href="#0" v-on:click="remove(t)">Delete</a></dd>
+            </dl>
+        </li>
+    </ol>
+</div>
+
+
+<form id="vmAdd" action="#0" v-on:submit.prevent="submit">
+    <p><input type="text" v-model="name"></p>
+    <p><input type="text" v-model="description"></p>
+    <p><button type="submit">Add</button></p>
+</form>
+
+
+
+</body>
+<html>

@@ -1,5 +1,3 @@
-# nodeUsing
+# node js example
 
-## hexo
-- http://coderunthings.com/2017/08/20/howhexoworks/
-
+## CommonJS规范
