@@ -4,9 +4,9 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "dev": "set NODE_ENV=development&& node a.js",
-    "dev2": "export NODE_ENV=development&& node a.js",
-    "build": "set NODE_ENV=production&& node a.js"
+    "dev": "set NODE_ENV=development&& node api/app.js",
+    "dev2": "export NODE_ENV=development&& node api/app.js",
+    "pro": "set NODE_ENV=production&& node api/app.js"
   },
   "author": "",
   "license": "",
