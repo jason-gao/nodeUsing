@@ -10,6 +10,14 @@
     <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.js"></script>
 
     <script>
+
+        function showError(resp) {
+            resp.json().then(function (result) {
+                console.log('Error: ' + result.message);
+            });
+        }
+
+
         // 初始化代码:
         $(function () {
             var vmAdd = new Vue({
@@ -37,7 +45,7 @@
                 methods: {
                     init: function () {
                         var that = this;
-                        that.$resource('/api/todos').get().then(function (resp) {
+                        that.$resource('http://localhost:3000/api/todos').get().then(function (resp) {
                             // 调用API成功时调用json()异步返回结果:
                             resp.json().then(function (result) {
                                 // 更新VM的todos:
@@ -48,10 +56,53 @@
                             alert('error');
                         });
                     },
-                    f:function () {
-
+                    create: function (todo) {
+                        var that = this;
+                        that.$resource('http://localhost:3000/api/todos').save(todo).then(function (resp) {
+                            resp.json().then(function (result) {
+                                that.todos.push(result);
+                            });
+                        }, function (resp) {
+                            alert(resp)
+                        });
+                    },
+                    update: function (todo, prop, e) {
+                        var that = this;
+                        var t = {
+                            name: todo.name,
+                            description: todo.description
+                        };
+                        t[prop] = e.target.innerText;
+                        if (t[prop] === todo[prop]) {
+                            return;
+                        }
+                        that.$resource('http://localhost:3000/api/todos/' + todo.id).update(t).then(function (resp) {
+                            resp.json().then(function (r) {
+                                todo.name = r.name;
+                                todo.description = r.description;
+                            });
+                        }, function (resp) {
+                            e.target.innerText = todo[prop];
+                            showError(resp);
+                        });
+                    },
+                    remove: function (todo) {
+                        var that = this;
+                        that.$resource('http://localhost:3000/api/todos/' + todo.id).delete().then(function (resp) {
+                            var i, index = -1;
+                            for (i=0; i<that.todos.length; i++) {
+                                if (that.todos[i].id === todo.id) {
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            if (index >= 0) {
+                                that.todos.splice(index, 1);
+                            }
+                        }, showError);
                     }
                 }
+
             });
 
             window.vmAdd = vmAdd;
